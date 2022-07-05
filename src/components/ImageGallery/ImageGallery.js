@@ -1,17 +1,25 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import s from './ImageGallery.module.css';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
 import Button from 'components/Button';
 import fetchImages from '../../service/images-api';
+import Modal from 'components/Modal';
 
 class ImageGallery extends Component {
+  static propTypes = {
+    query: PropTypes.string.isRequired,
+  };
+
   state = {
     images: [],
     loading: false,
     page: 1,
     showModal: false,
+    url: '',
   };
+
   componentDidUpdate(prevProps, prevState) {
     const { query } = this.props;
     const { page } = this.state;
@@ -42,20 +50,32 @@ class ImageGallery extends Component {
     });
   };
 
+  toogleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
+  showModal = imagesUrl => {
+    this.setState({ showModal: !this.state.showModal, url: imagesUrl });
+  };
+
   render() {
+    const { showModal, images, loading, url } = this.state;
+    const { toogleModal, onNextFetch } = this;
     return (
       <>
-        {this.state.loading && <Loader />}
+        {showModal && <Modal image={url} onClose={toogleModal} />}
+        {loading && <Loader />}
         <ul className={s.imageGallery}>
-          {this.state.images?.map(({ id, webformatURL }) => (
-            <ImageGalleryItem key={id} webformatURL={webformatURL} />
+          {images?.map(({ id, webformatURL, largeImageURL }) => (
+            <ImageGalleryItem
+              key={id}
+              largeImageURL={largeImageURL}
+              webformatURL={webformatURL}
+              onClick={this.showModal}
+            />
           ))}
         </ul>
-        {this.state.images.length < 0 ? (
-          <Button onNextFetch={this.onNextFetch} />
-        ) : (
-          <h2 className={s.title}> No images found for your request ...</h2>
-        )}
+        {images.length > 0 ? <Button onNextFetch={onNextFetch} /> : ''}
       </>
     );
   }

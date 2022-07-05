@@ -1,4 +1,3 @@
-// import Button from 'components/Button';
 import ImageGallery from 'components/ImageGallery';
 import { Component } from 'react';
 import Searchbar from '../Searchbar';
@@ -15,9 +14,10 @@ class App extends Component {
   };
 
   render() {
+    const { handleSearchSubmit } = this;
     return (
       <div className={s.app}>
-        <Searchbar onSubmit={this.handleSearchSubmit} />
+        <Searchbar onSubmit={handleSearchSubmit} />
         <ImageGallery query={this.state.query} />
       </div>
     );

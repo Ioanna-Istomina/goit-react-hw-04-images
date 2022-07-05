@@ -1,8 +1,13 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FaSearch } from 'react-icons/fa';
 import s from './Searchbar.module.css';
 
 class Searchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
+
   state = {
     query: '',
   };
@@ -19,9 +24,10 @@ class Searchbar extends Component {
   };
 
   render() {
+    const { handleSubmit, handleNameChange } = this;
     return (
       <header className={s.searchbar}>
-        <form onSubmit={this.handleSubmit} className={s.searchForm}>
+        <form onSubmit={handleSubmit} className={s.searchForm}>
           <button type="submit" className={s.searchFormButton}>
             <FaSearch />
           </button>
@@ -32,7 +38,7 @@ class Searchbar extends Component {
             autoFocus
             placeholder="Search images and photos"
             className={s.searchFormInput}
-            onChange={this.handleNameChange}
+            onChange={handleNameChange}
           />
         </form>
       </header>
