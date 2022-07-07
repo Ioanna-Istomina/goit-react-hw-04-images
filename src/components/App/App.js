@@ -1,27 +1,20 @@
 import ImageGallery from 'components/ImageGallery';
-import { Component } from 'react';
+import { useState } from 'react';
 import Searchbar from '../Searchbar';
 import s from './App.module.css';
 
-class App extends Component {
-  state = {
-    query: '',
-    images: null,
-  };
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
 
-  handleSearchSubmit = query => {
-    this.setState({ query });
-  };
+  const handleSearchSubmit = query => setQuery(query);
 
-  render() {
-    const { handleSearchSubmit } = this;
-    return (
-      <div className={s.app}>
-        <Searchbar onSubmit={handleSearchSubmit} />
-        <ImageGallery query={this.state.query} />
-      </div>
-    );
-  }
-}
-
+  return (
+    <div className={s.app}>
+      <Searchbar onSubmit={handleSearchSubmit} changePage={setPage} />
+      <ImageGallery query={query} changePage={setPage} page={page} />
+      {''}
+    </div>
+  );
+};
 export default App;
